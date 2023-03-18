@@ -1,0 +1,26 @@
+{% if expenses_list %}
+    <table border="1" cellpadding="2" cellspacing="2">
+		<tr>
+			<th>expense_id</th>
+			<th>expense_date</th>
+			<th>expense</th>
+			<th>payee</th>
+			<th>expense_category</th>
+            <th>items</th>
+            <th>time_modified</th>
+		</tr>
+		{% for expense in expeses %}
+			<tr>
+				<td>{{expense.expense_id}}</td>
+				<td>{{expense.expense_date}}</td>
+				<td>{{expense.expense}}</td>
+				<td>{{expense.payee}}</td>
+				<td>{{expense.expense_category}}</td>
+                <td>{{expense.items}}</td>
+                <td>{{expense.time_modified}}</td>
+			</tr>
+		{% endfor %}
+    </table>
+{% else %}
+    <p>No user record available</p>
+{% endif %}

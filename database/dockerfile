@@ -1,0 +1,6 @@
+FROM mysql:8.0
+
+# ARG MYSQL_ROOT_PASSWORD
+COPY ./create_db.sql /tmp
+
+CMD [ "mysqld", "--init-file=/tmp/create_db.sql" ]
