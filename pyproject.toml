@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "moneyrobot"
 version = "0.1.0"
-description = ""
+description = "Repository containing all the source code for MoneyRobot."
 authors = ["Michael Dreisinger <mike.dreisinger95@gmail.com>"]
 readme = "README.md"
 

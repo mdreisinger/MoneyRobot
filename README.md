@@ -8,6 +8,8 @@ An application to manage personal finances.
 - [pyenv](https://realpython.com/intro-to-pyenv/)
 - [poetry](https://python-poetry.org/docs/basic-usage/)
 
+# Packaging
+- https://medium.com/clarityai-engineering/how-to-create-and-distribute-a-minimalist-cli-tool-with-python-poetry-click-and-pipx-c0580af4c026
 
 # Connect to RDS instance from host machine using bastion to tunnel
 [rds-connect-ec2-bastion-host](https://aws.amazon.com/premiumsupport/knowledge-center/rds-connect-ec2-bastion-host/)
@@ -18,3 +20,6 @@ An application to manage personal finances.
 Edit [here](https://lucid.app/lucidchart/bfb9b9d4-dfc2-4de9-b9f7-2428763bdefa/edit?viewport_loc=-460%2C-59%2C2094%2C938%2CVGZGyrv0Gzg3&invitationId=inv_254e42df-804b-42dd-b150-4e20d3a46bee)
 
 ![Alt text](Documentation/MoneyRobotERD.png?raw=true "Title")
+
+# Random things to note:
+- Defualt ec2 username: ec2-user
