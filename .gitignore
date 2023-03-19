@@ -1,3 +1,6 @@
+# Database packaging
+create_db_tables_package*
+
 # Terraform
 .terraform*
 terraform.tfstate*

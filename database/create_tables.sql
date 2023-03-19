@@ -1,8 +1,7 @@
-CREATE DATABASE moneyrobot;
 USE moneyrobot;
 
 CREATE TABLE expenses (
-    expense_id binary(16) default (uuid_to_bin(uuid())) not null primary key,
+    expense_id BINARY(16) default (uuid_to_bin(uuid())) not null primary key,
     expense_date DATE DEFAULT CURRENT_TIMESTAMP,
     expense DECIMAL(8,2),
     payee TEXT NOT NULL,
@@ -12,28 +11,28 @@ CREATE TABLE expenses (
 );
 
 CREATE TABLE expense_notes (
-    expense_note_id binary(16) default (uuid_to_bin(uuid())) not null primary key,
+    expense_note_id BINARY(16) default (uuid_to_bin(uuid())) not null primary key,
     note TEXT NOT NULL,
     time_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     time_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    expense_id binary(16)
+    expense_id BINARY(16)
 );
 
-CREATE TABLE incomes (
-    income_id binary(16) default (uuid_to_bin(uuid())) not null primary key,
-    expense_date DATE DEFAULT CURRENT_TIMESTAMP,
-    expense DECIMAL(8,2),
+CREATE TABLE income (
+    income_id BINARY(16) default (uuid_to_bin(uuid())) not null primary key,
+    income_date DATE DEFAULT CURRENT_TIMESTAMP,
+    income DECIMAL(8,2),
     payor TEXT NOT NULL,
     income_category TEXT NOT NULL,
     time_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE income_notes (
-    income_note_id binary(16) default (uuid_to_bin(uuid())) not null primary key,
+    income_note_id BINARY(16) default (uuid_to_bin(uuid())) not null primary key,
     note TEXT NOT NULL,
     time_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     time_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    expense_id binary(16)
+    income_id BINARY(16)
 );
 
 ALTER TABLE expense_notes

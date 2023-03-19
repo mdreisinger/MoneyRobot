@@ -7,10 +7,8 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-django = "^4.1.7"
-flask-mysqldb = "^1.0.1"
-python-dotenv = "^1.0.0"
-
+pymysql = "^1.0.2"
+aws-secretsmanager-caching = "^1.1.1.5"
 
 [build-system]
 requires = ["poetry-core"]
