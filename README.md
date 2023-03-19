@@ -1,2 +1,20 @@
-# money-robot
-An application to manage personal finances
+# MoneyRobot
+An application to manage personal finances.
+
+# Python Version
+`3.11.2`
+
+# Pyenv / Poetry
+- [pyenv](https://realpython.com/intro-to-pyenv/)
+- [poetry](https://python-poetry.org/docs/basic-usage/)
+
+
+# Connect to RDS instance from host machine using bastion to tunnel
+[rds-connect-ec2-bastion-host](https://aws.amazon.com/premiumsupport/knowledge-center/rds-connect-ec2-bastion-host/)
+- `ssh -i ".ssh/bastion-dev-key.pem" -L 3336:moneyrobot-dev.cejrdrwxbhyb.us-west-2.rds.amazonaws.com:3306 ec2-user@ec2-52-12-88-47.us-west-2.compute.amazonaws.com -N -f`
+- `mysql -h 127.0.0.1 -P 3336 -u moneyrobot -p`
+
+# Entity Relationship Diagram
+Edit [here](https://lucid.app/lucidchart/bfb9b9d4-dfc2-4de9-b9f7-2428763bdefa/edit?viewport_loc=-460%2C-59%2C2094%2C938%2CVGZGyrv0Gzg3&invitationId=inv_254e42df-804b-42dd-b150-4e20d3a46bee)
+
+![Alt text](Documentation/MoneyRobotERD.png?raw=true "Title")
