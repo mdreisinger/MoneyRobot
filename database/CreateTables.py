@@ -1,9 +1,17 @@
+#pylint:disable=invalid-name
+"""
+Code for a Lambda to create tables in moneyrobot db given sql file.
+"""
+
+print("Lambda called!!")
+
+import json
 import logging
 import os
 import sys
 
-from aws_secretsmanager_caching import SecretCache, SecretCacheConfig 
-import botocore 
+from aws_secretsmanager_caching import SecretCache, SecretCacheConfig
+import botocore
 import botocore.session
 import pymysql
 
@@ -11,8 +19,7 @@ client = botocore.session.get_session().create_client('secretsmanager')
 cache_config = SecretCacheConfig()
 cache = SecretCache( config = cache_config, client = client)
 
-secret = cache.get_secret_string('moneyrobot-dev-secret')
-
+secret = json.loads(cache.get_secret_string('moneyrobot-dev-secret'))
 RDS_HOST = os.getenv("RDS_HOST")
 USERNAME = os.getenv("USERNAME")
 PASSWORD = os.getenv("PASSWORD")
@@ -26,6 +33,7 @@ db_name = DB_NAME if DB_NAME else secret["dbname"]
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+#pylint:disable=unused-argument
 def create_tables(event, context):
     """
     This function creates new tables in our RDS instance.
@@ -49,9 +57,12 @@ def create_tables(event, context):
         for command in sql_commands:
             cur.execute(command)
             conn.commit()
-                   
+
         cur.execute("show tables")
         logger.info("The following tables have been added to the database:")
         for row in cur:
             logger.info(row)
     conn.commit()
+
+# if __name__ == "__main__":
+#     create_tables("","")
