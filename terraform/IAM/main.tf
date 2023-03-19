@@ -1,24 +1,37 @@
-# aws_iam_role.createDatabaseTables-role-0f4ohe5s:
-resource "aws_iam_role" "createDatabaseTables-role-0f4ohe5s" {
-    assume_role_policy    = jsonencode(
-        {
-            Statement = [
-                {
-                    Action    = "sts:AssumeRole"
-                    Effect    = "Allow"
-                    Principal = {
-                        Service = "lambda.amazonaws.com"
-                    }
-                },
-            ]
-            Version   = "2012-10-17"
-        }
-    )
-    force_detach_policies = false
-    managed_policy_arns   = [
-        "arn:aws:iam::126493000772:policy/service-role/AWSLambdaBasicExecutionRole-11d69ec0-4afb-4b49-8af7-2362c8b96866",
+data "aws_iam_policy_document" "createDatabaseTables_assume_role_policy" {
+  statement {
+    actions = [
+      "sts:AssumeRole"
     ]
-    max_session_duration  = 3600
-    name                  = "createDatabaseTables-role-0f4ohe5s"
-    path                  = "/service-role/"
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "createDatabaseTables_domain_join_policy" {
+  statement {
+    actions = [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetSecretValue",
+        "ec2:DescribeNetworkInterfaces",
+        "ec2:CreateNetworkInterface",
+        "ec2:DeleteNetworkInterface",
+        "ec2:DescribeInstances",
+        "ec2:AttachNetworkInterface"
+    ]
+    effect = "Allow"
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role" "createDatabaseTables-role-0f4ohe5s" {
+    name = "createDatabaseTables-role-0f4ohe5s"
+    assume_role_policy = data.aws_iam_policy_document.createDatabaseTables_assume_role_policy.json
+    inline_policy {
+        policy = data.aws_iam_policy_document.createDatabaseTables_domain_join_policy.json
+    }
+    path = "/service-role/"
 }
