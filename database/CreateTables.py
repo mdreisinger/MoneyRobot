@@ -1,9 +1,7 @@
 #pylint:disable=invalid-name
 """
-Code for a Lambda to create tables in moneyrobot db given sql file.
+Code to create tables in moneyrobot db given sql file.
 """
-
-print("Lambda called!!")
 
 import json
 import logging
@@ -33,8 +31,7 @@ db_name = DB_NAME if DB_NAME else secret["dbname"]
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-#pylint:disable=unused-argument
-def create_tables(event, context):
+def create_tables():
     """
     This function creates new tables in our RDS instance.
     """
@@ -63,6 +60,3 @@ def create_tables(event, context):
         for row in cur:
             logger.info(row)
     conn.commit()
-
-# if __name__ == "__main__":
-#     create_tables("","")

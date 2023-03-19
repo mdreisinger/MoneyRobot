@@ -1,4 +1,6 @@
-# Create ZIP package for lambda and push to S3
+
+
+# [DEPRECATED!!!] Create ZIP package for lambda and push to S3
 - `cd create_db_tables_package`
 - `zip -r ../create_db_tables_package.zip .`
 - `cd ..`
