@@ -31,6 +31,19 @@ resource "aws_security_group" "default" {
             to_port          = 3306
         },
         {
+            cidr_blocks      = [
+                "178.249.214.66/32",
+            ]
+            description      = "Allow my laptop to SSH"
+            from_port        = 22
+            ipv6_cidr_blocks = []
+            prefix_list_ids  = []
+            protocol         = "tcp"
+            security_groups  = []
+            self             = false
+            to_port          = 22
+        },
+        {
             cidr_blocks      = []
             description      = ""
             from_port        = 0
