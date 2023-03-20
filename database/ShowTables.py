@@ -1,23 +1,27 @@
 """
-Module to insert test data into the moneyrobot database.
+Code to show data in tables.
 """
+
 import json
 import os
-import pathlib
 import sys
 
 from aws_secretsmanager_caching import SecretCache, SecretCacheConfig
 import botocore
 import botocore.session
 import click
-from openpyxl import load_workbook
 import pymysql
+from tabulate import tabulate
 
 
 @click.command()
-def insert_test_data():
+def show_tables():
     """
-    Function to insert test data into the moneyrobot database.
+    This function shows the data in all tables in our RDS instance.
+    The database information it uses can be defined in environment variables:
+    RDS_HOST, USERNAME, PASSWORD, DB_NAME.
+    If these environment variables are not defined, it will use the information
+    defined in 'moneyrobot-dev-secret' in SecretsManager.
     """
     rds_host = os.getenv("RDS_HOST")
     username = os.getenv("USERNAME")
@@ -43,29 +47,34 @@ def insert_test_data():
                                user=username,
                                passwd=password,
                                db=db_name,
-                               connect_timeout=10,
-                               cursorclass=pymysql.cursors.DictCursor)
+                               connect_timeout=10)
     except pymysql.MySQLError as error:
         print("ERROR: Unexpected error: Could not connect to MySQL instance.")
         print(error)
         sys.exit()
     print("SUCCESS: Connection to RDS MySQL instance succeeded")
+    show_table("expenses", "cast(expense_date as date) as date, "
+               "expense, payee, expense_category, items, time_modified", conn)
+    show_table("expense_notes", "note, time_created, time_modified, expense_id", conn)
+    show_table("income", "cast(income_date as date) as date, "
+               "payor, income, income_category, time_modified", conn)
+    show_table("income_notes", "note, time_created, time_modified, income_id", conn)
 
-    cur_dir = pathlib.Path(__file__).parent.resolve()
-    book = load_workbook(f"{cur_dir}/sample_data.xlsx")
-    sheet = book.active
-
+def show_table(table_name, columns, conn):
+    """
+    Generic function to print tables
+    """
     with conn.cursor() as cur:
-        for row in range(1, sheet.max_row + 1):
-            expense_date = str(sheet.cell(row, 1).value).replace("'","")
-            payee = str(sheet.cell(row, 2).value).replace("'","")
-            items = str(sheet.cell(row, 3).value).replace("'","")
-            expense = str(sheet.cell(row, 4).value).replace("'","")
-            sql = "INSERT INTO expenses (expense_date, payee, items, expense) VALUES "
-            sql += f"('{expense_date}', "
-            sql += f"'{payee}', "
-            sql += f"'{items}', "
-            sql += f"'{expense}')"
-            cur.execute(sql)
-            print(sql)
-    conn.commit()
+        try:
+            cur.execute(f"select {columns} from {table_name}")
+        except:
+            print(f"{table_name} doesn't exist")
+            return
+        table = cur.fetchall()
+        raw_headers = [column.strip() for column in columns.split(",")]
+        headers = [header if "date" not in header else "date" for header in raw_headers]
+        print(f"\n{table_name}:")
+        print(tabulate(table,
+                       headers=headers,
+                       tablefmt='mysql'))
+        print("\n")

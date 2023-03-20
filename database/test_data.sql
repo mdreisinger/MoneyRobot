@@ -1,0 +1,1 @@
+INSERT INTO expenses (expense_date, expense, payee, expense_category, items) VALUES ('2023-03-19', 400, 'walmart', 'groceries', 'groceries');
