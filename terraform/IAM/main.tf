@@ -1,5 +1,5 @@
-# aws_iam_role.ec2_access_s3:
-resource "aws_iam_role" "ec2_access_s3" {
+# aws_iam_role.bastion_role:
+resource "aws_iam_role" "bastion_role" {
     assume_role_policy    = jsonencode(
         {
             Statement = [
@@ -18,9 +18,10 @@ resource "aws_iam_role" "ec2_access_s3" {
     force_detach_policies = false
     managed_policy_arns   = [
         "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+        "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
     ]
     max_session_duration  = 3600
-    name                  = "ec2_access_s3"
+    name                  = "bastion_role"
     path                  = "/"
     tags                  = {}
     tags_all              = {}

@@ -1,10 +1,9 @@
 """
-Code to create tables in moneyrobot db given sql file.
+Code to drop all tables in moneyrobot db given sql file.
 """
 
 import json
 import os
-import pathlib
 import sys
 
 from aws_secretsmanager_caching import SecretCache, SecretCacheConfig
@@ -15,9 +14,9 @@ import pymysql
 
 
 @click.command()
-def create_tables():
+def drop_tables():
     """
-    This function creates new tables in our RDS instance.
+    This function drops all tables in our RDS instance.
     The database information it uses can be defined in environment variables:
     RDS_HOST, USERNAME, PASSWORD, DB_NAME.
     If these environment variables are not defined, it will use the information
@@ -47,30 +46,23 @@ def create_tables():
                                user=username,
                                passwd=password,
                                db=db_name,
-                               connect_timeout=10)
+                               connect_timeout=10,
+                               cursorclass=pymysql.cursors.DictCursor)
     except pymysql.MySQLError as error:
         print("ERROR: Unexpected error: Could not connect to MySQL instance.")
         print(error)
         sys.exit()
     print("SUCCESS: Connection to RDS MySQL instance succeeded")
 
-    cur_dir = pathlib.Path(__file__).parent.resolve()
-
-    with open(f'{cur_dir}/create_tables.sql', 'r', encoding='utf-8') as sql_file:
-        sql_commands = sql_file.read().split(";")
-
     with conn.cursor() as cur:
-        for command in sql_commands:
-            if command:
-                try:
-                    print(f"Executing command:\n {command}\n\n")
-                    cur.execute(command)
-                    conn.commit()
-                except Exception as error:
-                    print(f"Failed to execute command. Error: {error}")
-
         cur.execute("show tables")
-        print("The following tables have been added to the database:")
-        for row in cur:
-            print(row[0])
+        tables = cur.fetchall()
+        print(tables)
+        cur.execute("SET FOREIGN_KEY_CHECKS = 0")
+        for table_dict in tables:
+            for table in table_dict.values():
+                print(f"Dropping table: {table}")
+                cur.execute(f"drop table {table}")
+                conn.commit()
+        cur.execute("SET FOREIGN_KEY_CHECKS = 1")
     conn.commit()
