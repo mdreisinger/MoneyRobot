@@ -1,7 +1,6 @@
 """
-Code to create tables in moneyrobot db given sql file.
+Module to insert test data into the moneyrobot database.
 """
-
 import json
 import os
 import pathlib
@@ -11,17 +10,14 @@ from aws_secretsmanager_caching import SecretCache, SecretCacheConfig
 import botocore
 import botocore.session
 import click
+from openpyxl import load_workbook
 import pymysql
 
 
 @click.command()
-def create_tables():
+def insert_test_data():
     """
-    This function creates new tables in our RDS instance.
-    The database information it uses can be defined in environment variables:
-    RDS_HOST, USERNAME, PASSWORD, DB_NAME.
-    If these environment variables are not defined, it will use the information
-    defined in 'moneyrobot-dev-secret' in SecretsManager.
+    Function to insert test data into the moneyrobot database.
     """
     rds_host = os.getenv("RDS_HOST")
     username = os.getenv("USERNAME")
@@ -47,7 +43,8 @@ def create_tables():
                                user=username,
                                passwd=password,
                                db=db_name,
-                               connect_timeout=10)
+                               connect_timeout=10,
+                               cursorclass=pymysql.cursors.DictCursor)
     except pymysql.MySQLError as error:
         print("ERROR: Unexpected error: Could not connect to MySQL instance.")
         print(error)
@@ -55,22 +52,20 @@ def create_tables():
     print("SUCCESS: Connection to RDS MySQL instance succeeded")
 
     cur_dir = pathlib.Path(__file__).parent.resolve()
-
-    with open(f'{cur_dir}/create_tables.sql', 'r', encoding='utf-8') as sql_file:
-        sql_commands = sql_file.read().split(";")
+    book = load_workbook(f"{cur_dir}/sample_data.xlsx")
+    sheet = book.active
 
     with conn.cursor() as cur:
-        for command in sql_commands:
-            if command:
-                try:
-                    print(f"Executing command:\n {command}\n\n")
-                    cur.execute(command)
-                    conn.commit()
-                except Exception as error:
-                    print(f"Failed to execute command. Error: {error}")
-
-        cur.execute("show tables")
-        print("The following tables have been added to the database:")
-        for row in cur:
-            print(row[0])
+        for row in range(1, sheet.max_row + 1):
+            expense_date = str(sheet.cell(row, 1).value).replace("'","")
+            payee = str(sheet.cell(row, 2).value).replace("'","")
+            items = str(sheet.cell(row, 3).value).replace("'","")
+            expense = str(sheet.cell(row, 4).value).replace("'","")
+            sql = "INSERT INTO expenses (expense_date, payee, items, expense) VALUES "
+            sql += f"('{expense_date}', "
+            sql += f"'{payee}', "
+            sql += f"'{items}', "
+            sql += f"'{expense}')"
+            cur.execute(sql)
+            print(sql)
     conn.commit()

@@ -1,10 +1,9 @@
 """
-Code to create tables in moneyrobot db given sql file.
+Code to show data in tables.
 """
 
 import json
 import os
-import pathlib
 import sys
 
 from aws_secretsmanager_caching import SecretCache, SecretCacheConfig
@@ -12,12 +11,13 @@ import botocore
 import botocore.session
 import click
 import pymysql
+from tabulate import tabulate
 
 
 @click.command()
-def create_tables():
+def show_tables():
     """
-    This function creates new tables in our RDS instance.
+    This function shows the data in all tables in our RDS instance.
     The database information it uses can be defined in environment variables:
     RDS_HOST, USERNAME, PASSWORD, DB_NAME.
     If these environment variables are not defined, it will use the information
@@ -53,24 +53,28 @@ def create_tables():
         print(error)
         sys.exit()
     print("SUCCESS: Connection to RDS MySQL instance succeeded")
+    show_table("expenses", "cast(expense_date as date) as date, "
+               "expense, payee, expense_category, items, time_modified", conn)
+    show_table("expense_notes", "note, time_created, time_modified, expense_id", conn)
+    show_table("income", "cast(income_date as date) as date, "
+               "payor, income, income_category, time_modified", conn)
+    show_table("income_notes", "note, time_created, time_modified, income_id", conn)
 
-    cur_dir = pathlib.Path(__file__).parent.resolve()
-
-    with open(f'{cur_dir}/create_tables.sql', 'r', encoding='utf-8') as sql_file:
-        sql_commands = sql_file.read().split(";")
-
+def show_table(table_name, columns, conn):
+    """
+    Generic function to print tables
+    """
     with conn.cursor() as cur:
-        for command in sql_commands:
-            if command:
-                try:
-                    print(f"Executing command:\n {command}\n\n")
-                    cur.execute(command)
-                    conn.commit()
-                except Exception as error:
-                    print(f"Failed to execute command. Error: {error}")
-
-        cur.execute("show tables")
-        print("The following tables have been added to the database:")
-        for row in cur:
-            print(row[0])
-    conn.commit()
+        try:
+            cur.execute(f"select {columns} from {table_name}")
+        except:
+            print(f"{table_name} doesn't exist")
+            return
+        table = cur.fetchall()
+        raw_headers = [column.strip() for column in columns.split(",")]
+        headers = [header if "date" not in header else "date" for header in raw_headers]
+        print(f"\n{table_name}:")
+        print(tabulate(table,
+                       headers=headers,
+                       tablefmt='mysql'))
+        print("\n")
