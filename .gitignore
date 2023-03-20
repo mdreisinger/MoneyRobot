@@ -1,3 +1,6 @@
+# Finder BS
+.DS_Store
+
 # Database packaging
 create_db_tables_package*
 
