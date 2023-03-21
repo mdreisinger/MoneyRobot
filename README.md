@@ -22,7 +22,7 @@ An application to manage personal finances.
 # Entity Relationship Diagram
 Edit [here](https://lucid.app/lucidchart/bfb9b9d4-dfc2-4de9-b9f7-2428763bdefa/edit?viewport_loc=-460%2C-59%2C2094%2C938%2CVGZGyrv0Gzg3&invitationId=inv_254e42df-804b-42dd-b150-4e20d3a46bee)
 
-![Alt text](Documentation/MoneyRobotERD.png?raw=true "Title")
+![Alt text](documentation/MoneyRobotERD.png?raw=true "Title")
 
 # Random things to note:
 - Defualt ec2 username: ubuntu
