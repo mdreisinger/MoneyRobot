@@ -19,6 +19,7 @@ resource "aws_iam_role" "bastion_role" {
     managed_policy_arns   = [
         "arn:aws:iam::aws:policy/AmazonS3FullAccess",
         "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
+        "arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess",
     ]
     max_session_duration  = 3600
     name                  = "bastion_role"
