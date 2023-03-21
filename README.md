@@ -57,3 +57,6 @@ Edit [here](https://lucid.app/lucidchart/bfb9b9d4-dfc2-4de9-b9f7-2428763bdefa/ed
 - `aws ecr get-login-password --region us-west-2 | sudo docker login --username AWS --password-stdin 126493000772.dkr.ecr.us-west-2.amazonaws.com`
 - `sudo docker pull 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi:latest`
 - `sudo docker run 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi`
+
+# Connect to API from host machine:
+- In web browser: http://ec2-34-219-46-236.us-west-2.compute.amazonaws.com/docs
