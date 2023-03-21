@@ -14,7 +14,7 @@ An application to manage personal finances.
 - `mysql -h 127.0.0.1 -P 3336 -u moneyrobot -p`
 
 # Connect to RDS instance from bastion
-- `ssh -i ".ssh/bastion-dev-key.pem" ec2-35-90-1-56.us-west-2.compute.amazonaws.com`
+- `ssh -i ".ssh/bastion-dev-key.pem" ubuntu@ec2-35-90-1-56.us-west-2.compute.amazonaws.com`
 - (Conditional) `sudo apt update`
 - (Conditional) `sudo apt install mysql-client`
 - `mysql -h moneyrobot-dev.cejrdrwxbhyb.us-west-2.rds.amazonaws.com -u moneyrobot -p`
@@ -33,7 +33,7 @@ Edit [here](https://lucid.app/lucidchart/bfb9b9d4-dfc2-4de9-b9f7-2428763bdefa/ed
         poetry env remove <current environment>
         poetry install  # will create a new environment using your updated configuration
         
-# Package and push to S3
+# Package and push database_setup to S3
 - `poetry build`
 - `aws s3 cp dist/moneyrobot-0.1.0-py3-none-any.whl s3://moneyrobot/`
 - On Bastion:
@@ -41,3 +41,19 @@ Edit [here](https://lucid.app/lucidchart/bfb9b9d4-dfc2-4de9-b9f7-2428763bdefa/ed
   - Install aws-cli `sudo apt  install awscli`
   - Download wheel file: `cd /tmp/; aws s3 cp s3://moneyrobot/moneyrobot-0.1.0-py3-none-any.whl .`
   - Install package: `sudo pip install moneyrobot-0.1.0-py3-none-any.whl`
+
+# Push API image to ECR
+- `aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 126493000772.dkr.ecr.us-west-2.amazonaws.com`
+- `docker build -t moneyrobotapi . --platform linux/amd64`
+- `docker tag moneyrobotapi:latest 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi:latest`
+- `docker push 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi:latest`
+
+# Connect to moneyrobotapi EC2
+- `ssh -i ".ssh/bastion-dev-key.pem" ubuntu@ec2-34-219-46-236.us-west-2.compute.amazonaws.com`
+
+# Run api on moneyrobotapi EC2:
+- (Conditional) `cd /tmp; curl -fsSL https://get.docker.com -o get-docker.sh; sh get-docker.sh`
+- (Conditional) `sudo apt install awscli`
+- `aws ecr get-login-password --region us-west-2 | sudo docker login --username AWS --password-stdin 126493000772.dkr.ecr.us-west-2.amazonaws.com`
+- `sudo docker pull 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi:latest`
+- `sudo docker run 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi`
