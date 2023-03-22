@@ -1,5 +1,5 @@
 """
-Models for the API.
+Schemas for the API.
 """
 
 import datetime
@@ -11,6 +11,7 @@ class transaction(BaseModel):
     """
     Class to define the transaction model for the API.
     """
+    # transaction_id: Optional[int]
     transaction_date: Optional[datetime.date]
     transactor: str
     transaction_category: str
