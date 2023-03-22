@@ -31,25 +31,25 @@ def get_transaction_by_id(db: Session, transaction_id: int):
     """
     return db.query(transactions).filter(transactions.transaction_id == transaction_id)
 
-def get_transactions_by_date(db: Session, transaction_date: Date):
-    """
-    Get transactions given a date.
-    """
-    return db.query(transactions).filter(transactions.transaction_date == transaction_date)
+# def get_transactions_by_date(db: Session, transaction_date: Date):
+#     """
+#     Get transactions given a date.
+#     """
+#     return db.query(transactions).filter(transactions.transaction_date == transaction_date)
 
-def get_all_transactions(db: Session):
-    """
-    Get a lot of transactions.
-    """
-    return db.query(transactions).all()
+# def get_all_transactions(db: Session):
+#     """
+#     Get a lot of transactions.
+#     """
+#     return db.query(transactions).all()
 
-def update_transaction_amount(db: Session, existing_transaction_id: int, 
-                              new_transaction_amount: transaction.transaction_amount):
-    """
-    Function to modify a transaction to the database.
-    """
-    transaction_to_update = get_transaction_by_id(db, existing_transaction_id)
-    transaction_to_update.transaction_amount = new_transaction_amount
-    db.commit()
-    db.refresh(transaction_to_update)
-    return transaction_to_update
+# def update_transaction_amount(db: Session, existing_transaction_id: int, 
+#                               new_transaction_amount: transaction.transaction_amount):
+#     """
+#     Function to modify a transaction to the database.
+#     """
+#     transaction_to_update = get_transaction_by_id(db, existing_transaction_id)
+#     transaction_to_update.transaction_amount = new_transaction_amount
+#     db.commit()
+#     db.refresh(transaction_to_update)
+#     return transaction_to_update
