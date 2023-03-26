@@ -1,0 +1,26 @@
+name: CD
+
+on: [push]
+
+# on:
+#   push:
+#     branches:
+#       - master 
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Build and push docker image
+      run: |
+        cd api
+        docker build -t moneyrobotapi . --platform linux/amd64
+        docker tag moneyrobotapi:latest 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi:latest
+        aws ecr get-login-password --region us-west-2 | sudo docker login --username AWS --password-stdin 126493000772.dkr.ecr.us-west-2.amazonaws.com
+        docker push 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi:latest
+
+    - name: Deploy latest image to EC2
+      run: |
+        echo Steps TBD
