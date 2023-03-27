@@ -25,11 +25,11 @@ def add_transaction(db: Session, new_transaction: transaction):
     db.refresh(db_transaction)
     return db_transaction
 
-def get_transaction_by_id(db: Session, transaction_id: int):
-    """
-    Get a transaction given a transaction_id.
-    """
-    return db.query(transactions).filter(transactions.transaction_id == transaction_id)
+# def get_transaction_by_id(db: Session, transaction_id: int):
+#     """
+#     Get a transaction given a transaction_id.
+#     """
+#     return db.query(transactions).filter(transactions.transaction_id == transaction_id)
 
 # def get_transactions_by_date(db: Session, transaction_date: Date):
 #     """

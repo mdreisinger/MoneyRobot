@@ -11,7 +11,6 @@ class transaction(BaseModel):
     """
     Class to define the transaction model for the API.
     """
-    transaction_id: int
     transaction_date: Optional[datetime.date]
     transactor: str
     transaction_category: str

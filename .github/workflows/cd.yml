@@ -14,9 +14,9 @@ jobs:
     - name: Debug
       run: pwd
     - name: Debug 2
-      run: ls
+      run: ll
     - name: Build docker image
-      working-directory: ./api
+      working-directory: api
       run: |
         docker build -t moneyrobotapi . --platform linux/amd64
     - name: Tag docker image

@@ -117,9 +117,13 @@ if ! shopt -oq posix; then
 fi
 
 ##### Everything below this is custom #####
-alias getcontainer="container=$(sudo docker ps -a | awk '{print $1}'|  awk '(NR>1)')"
+alias unsetvars="unset container; unset image"
+alias getcontainer="export container=$(sudo docker ps -a | awk '{print $1}'|  awk '(NR>1)')"
 alias stopcontainer="sudo docker stop $container"
 alias rmcontainer="sudo docker rm $container"
-alias getimage="image=$(sudo docker images | awk '{print $3}'|  awk '(NR>1)')"
+alias getimage="export image=$(sudo docker images | awk '{print $3}'|  awk '(NR>1)')"
 alias rmimage="sudo docker image rm $image"
 alias dockerlogin="aws ecr get-login-password --region us-west-2 | sudo docker login --username AWS --password-stdin 126493000772.dkr.ecr.us-west-2.amazonaws.com"
+alias pullimage="sudo docker pull 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi:latest"
+alias runimage="sudo docker run -p 80:80 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi"
+alias redeploy="unsetvars; getcontainer; stopcontainer; rmcontainer; getimage; rmimage; dockerlogin; pullimage; runimage"
