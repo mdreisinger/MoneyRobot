@@ -13,7 +13,7 @@ jobs:
     steps:
     - name: debug
       run: |
-        ls ${{ pwd }}
+        ls ${{ github.workspace }}
     - name: Build docker image
       working-directory: api
       run: |
