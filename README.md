@@ -47,6 +47,7 @@ Edit [here](https://lucid.app/lucidchart/bfb9b9d4-dfc2-4de9-b9f7-2428763bdefa/ed
 - `docker build -t moneyrobotapi . --platform linux/amd64`
 - `docker tag moneyrobotapi:latest 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi:latest`
 - `docker push 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi:latest`
+- **ALL IN ONE:** `aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 126493000772.dkr.ecr.us-west-2.amazonaws.com;docker build -t moneyrobotapi . --platform linux/amd64;docker tag moneyrobotapi:latest 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi:latest;docker push 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi:latest; say "Image Pushed"`
 
 # Connect to moneyrobotapi EC2
 - `ssh -i ".ssh/bastion-dev-key.pem" ubuntu@ec2-34-219-46-236.us-west-2.compute.amazonaws.com`
@@ -60,3 +61,40 @@ Edit [here](https://lucid.app/lucidchart/bfb9b9d4-dfc2-4de9-b9f7-2428763bdefa/ed
 
 # Connect to API from host machine:
 - In web browser: http://ec2-34-219-46-236.us-west-2.compute.amazonaws.com/docs
+
+# Queries
+## Rent
+- `SELECT SUM(transaction_amount) FROM transactions WHERE transaction_date > '2023-03-01' and transaction_date < '2023-04-01' AND transaction_category IN ('Rent');`
+
+## Utilities
+- `SELECT SUM(transaction_amount) FROM transactions WHERE transaction_date > '2023-03-01' and transaction_date < '2023-04-01' AND transaction_category IN ("Xcel energy", "xfinity", "Parking permit", "Conservice", "T-mobile", "AWS");`
+
+## Groceries
+- `SELECT SUM(transaction_amount) FROM transactions WHERE transaction_date > '2023-03-01' and transaction_date < '2023-04-01' AND transaction_category IN ('Groceries');`
+
+## Transportation
+- `SELECT SUM(transaction_amount) FROM transactions WHERE transaction_date > '2023-03-01' and transaction_date < '2023-04-01' AND transaction_category IN ("Vehicle maintenance", "Gas", "Car wash", "Parking fees", "DMV fees", "Tolls", "Transportation");`
+
+## Medical Expenses
+- `SELECT SUM(transaction_amount) FROM transactions WHERE transaction_date > '2023-03-01' and transaction_date < '2023-04-01' AND transaction_category IN ("Prescriptions", "Medical Appoiintments");`
+
+## Personal Expenses
+- `SELECT SUM(transaction_amount) FROM transactions WHERE transaction_date > '2023-03-01' and transaction_date < '2023-04-01' AND transaction_category IN ("Wardrobe", "Home stuff", "Toiletries");`
+
+## Entertainment and Hobbies
+- `SELECT SUM(transaction_amount) FROM transactions WHERE transaction_date > '2023-03-01' and transaction_date < '2023-04-01' AND transaction_category IN ("Eating out & drinks", "Entertainment", "Snowboarding", "Course fees", "Subscriptions", "Hobbies", "Tools", "AWS", "Guns", "Ammo", "Gun stuff", "Plant stuff", "Bike stuff");`
+
+## Pets
+- `SELECT SUM(transaction_amount) FROM transactions WHERE transaction_date > '2023-03-01' and transaction_date < '2023-04-01' AND transaction_category IN ("Dog vet fees", "Cat vet fees", "Dog medication", "Cat medication", "Dog food", "Cat food", "Dog supplies", "Cat supplies", "Dog sitting", "Cat sitting", "Dog license", "ESA Fees");`
+
+## Gifts
+- `SELECT SUM(transaction_amount) FROM transactions WHERE transaction_date > '2023-03-01' and transaction_date < '2023-04-01' AND transaction_category IN ("Gifts");`
+
+## Investments
+- `SELECT SUM(transaction_amount) FROM transactions WHERE transaction_date > '2023-03-01' and transaction_date < '2023-04-01' AND transaction_category IN ("Investments");`
+
+## Other
+- `SELECT SUM(transaction_amount) FROM transactions WHERE transaction_date > '2023-03-01' and transaction_date < '2023-04-01' AND transaction_category IN ("Other");`
+
+## Income
+- `SELECT SUM(transaction_amount) FROM transactions WHERE transaction_date > '2023-03-01' and transaction_date < '2023-04-01' AND transaction_category IN ("Income", "Support from dad", "Income - Other");`
