@@ -11,6 +11,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: debug
+      run: |
+        ls ${{ pwd }}
     - name: Build docker image
       working-directory: api
       run: |
