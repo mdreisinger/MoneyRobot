@@ -1,5 +1,5 @@
 """
-Models for the API.
+Schemas for the API.
 """
 
 import datetime

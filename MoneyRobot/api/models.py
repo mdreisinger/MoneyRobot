@@ -21,5 +21,5 @@ class transactions(Base):
     transaction_category = Column(String)
     items = Column(String)
     transaction_amount = Column(Float)
-    time_modified = Column(TIMESTAMP, 
+    time_modified = Column(TIMESTAMP,
                            server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))

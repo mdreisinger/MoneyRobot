@@ -1,0 +1,32 @@
+name: CD
+
+# on: [push]
+
+# on:
+#   push:
+#     branches:
+#       - master 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: debug
+      run: |
+        ls ${{ github.workspace }}
+    - name: Build docker image
+      working-directory: api
+      run: |
+        docker build -t moneyrobotapi . --platform linux/amd64
+    - name: Tag docker image
+      working-directory: api
+      run: |
+        docker tag moneyrobotapi:latest 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi:latest
+    - name: Push docker image to ECR
+      working-directory: api
+      run: |
+        echo "$AWS_PASS" | sudo docker login --username AWS --password-stdin 126493000772.dkr.ecr.us-west-2.amazonaws.com
+        docker push 126493000772.dkr.ecr.us-west-2.amazonaws.com/moneyrobotapi:latest
+    - name: Deploy latest image to EC2
+      run: |
+        echo Steps TBD
